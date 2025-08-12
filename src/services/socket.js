@@ -5,15 +5,8 @@ const API_BASE_URL = 'http://localhost:8080';
 let stompClient = null;
 const subscriptions = {};
 
-/**
- * Connects to the WebSocket server.
- * @param {string} token - The JWT token for authentication.
- * @param {function} onPrivateMessage - Callback for private messages.
- * @param {function} onGroupMessage - Callback for group messages.
- */
 export const connectWebSocket = (token, onPrivateMessage, onGroupMessage, onConnect) => {
   if (stompClient && stompClient.connected) {
-    console.log('WebSocket already connected.');
     return;
   }
 
@@ -22,16 +15,12 @@ export const connectWebSocket = (token, onPrivateMessage, onGroupMessage, onConn
   stompClient.reconnect_delay = 5000;
 
   stompClient.connect(
-    {}, // No extra headers needed here, token is in URL
+    {},
     (frame) => {
       console.log('WebSocket Connected: ' + frame);
-      
-      // Subscribe to personal queue for private messages
       subscriptions.private = stompClient.subscribe('/user/queue/messages', (message) => {
         onPrivateMessage(JSON.parse(message.body));
       });
-      
-      // The onConnect callback allows the component to know connection is ready
       if(onConnect) onConnect(); 
     },
     (error) => {
@@ -40,47 +29,41 @@ export const connectWebSocket = (token, onPrivateMessage, onGroupMessage, onConn
   );
 };
 
-/**
- * Subscribes to a specific group's topic.
- * @param {string} groupId - The ID of the group to subscribe to.
- * @param {function} onGroupMessage - The callback to handle incoming messages.
- */
 export const subscribeToGroup = (groupId, onGroupMessage) => {
-    if (!stompClient || !stompClient.connected) {
-        console.error("Cannot subscribe, Stomp client not connected.");
-        return;
-    }
-    // Unsubscribe from any existing group subscription to avoid multiple handlers
+    if (!stompClient || !stompClient.connected) return;
     if (subscriptions.group) {
         subscriptions.group.unsubscribe();
     }
     subscriptions.group = stompClient.subscribe(`/topic/group/${groupId}`, (message) => {
         onGroupMessage(JSON.parse(message.body));
     });
-    console.log(`Subscribed to /topic/group/${groupId}`);
 };
 
-/**
- * Disconnects from the WebSocket server.
- */
 export const disconnectWebSocket = () => {
   if (stompClient && stompClient.connected) {
-    stompClient.disconnect(() => {
-      console.log('WebSocket Disconnected');
-    });
+    stompClient.disconnect(() => {});
     stompClient = null;
     Object.keys(subscriptions).forEach(key => delete subscriptions[key]);
   }
 };
 
-/**
- * Sends a message via WebSocket.
- * @param {object} payload - The message payload.
- * @param {'private' | 'group'} type - The type of message.
- */
 export const sendMessage = (payload, type) => {
   if (stompClient && stompClient.connected) {
-    const destination = type === 'private' ? '/app/private-message' : '/app/group-message';
+    let destination = '';
+    
+    // --- THIS IS THE FIX ---
+    // The 'share' case has been removed as it is now handled via a standard API call.
+    switch (type) {
+        case 'private':
+            destination = '/app/private-message';
+            break;
+        case 'group':
+            destination = '/app/group-message';
+            break;
+        default:
+            console.error("Unknown message type:", type);
+            return;
+    }
     stompClient.send(destination, {}, JSON.stringify(payload));
   } else {
     console.error('Cannot send message, WebSocket is not connected.');

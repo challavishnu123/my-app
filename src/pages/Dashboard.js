@@ -5,28 +5,20 @@ import ChatArea from '../components/ChatArea';
 import { apiCall } from '../services/api';
 import { connectWebSocket, disconnectWebSocket, sendMessage, subscribeToGroup } from '../services/socket';
 
-const ChatList = ({ friends, groups, onSelectChat, currentChat, onRemoveFriend, onSearchChange, searchResults, onConnectRequest }) => (
+const ChatList = ({ friends, groups, onSelectChat, currentChat, onRemoveFriend, onSearchChange, searchResults }) => (
     <div className="chat-list-panel">
         <div className="search-bar-container">
-            <input
-                type="text"
-                placeholder="Search for users to connect..."
-                onChange={onSearchChange}
-                className="user-search-input"
-            />
+            <input type="text" placeholder="Search for users..." onChange={onSearchChange} className="user-search-input"/>
         </div>
 
         {searchResults.length > 0 && (
             <div className="search-results">
                 <h3 className="list-header">Search Results</h3>
                 {searchResults.map(user => (
-                    <div key={user.username} className="list-item search-item">
-                        <Link to={`/profile/${user.username}`} className="friend-profile-link">
-                            <div className="avatar">{user.username.charAt(0).toUpperCase()}</div>
-                            <span className="item-name">{user.username} ({user.userType})</span>
-                        </Link>
-                        <button onClick={() => onConnectRequest(user.username)} className="connect-btn">Connect</button>
-                    </div>
+                    <Link to={`/profile/${user.username}`} key={user.username} className="list-item search-item">
+                        <div className="avatar">{user.username.charAt(0).toUpperCase()}</div>
+                        <span className="item-name">{user.username}</span>
+                    </Link>
                 ))}
             </div>
         )}
@@ -59,6 +51,7 @@ const ChatList = ({ friends, groups, onSelectChat, currentChat, onRemoveFriend, 
     </div>
 );
 
+
 const Dashboard = () => {
     const { user, token } = useAuth();
     const [friends, setFriends] = useState([]);
@@ -79,7 +72,7 @@ const Dashboard = () => {
             const data = await apiCall(`/api/chat/private-messages/${id}`);
             setMessages(data.messages);
         } else if (type === 'group') {
-            subscribeToGroup(id, handleNewGroupMessage);
+            subscribeToGroup(id, () => {}); // WebSocket subscription
             const groupDetails = await apiCall(`/api/chat/groups/${id}`);
             const isMember = groupDetails.group.members.includes(user.username);
             setGroupMembers(groupDetails.group.members);
@@ -161,6 +154,7 @@ const Dashboard = () => {
     const handleRemoveFriend = async (friendId) => {
         if (!window.confirm(`Are you sure you want to remove ${friendId} as a friend?`)) return;
         try {
+            // This assumes a backend endpoint exists to remove a connection
             await apiCall(`/api/connections/remove/${friendId}`, 'POST');
             setFriends(prev => prev.filter(f => f !== friendId));
             if (currentChat?.id === friendId) {
@@ -181,15 +175,6 @@ const Dashboard = () => {
             alert(`Failed to remove member: ${error.message}`);
         }
     };
-    
-    const handleConnectRequest = async (receiverId) => {
-        try {
-            const response = await apiCall(`/api/connections/request/${receiverId}`, 'POST');
-            alert(response.message || "Connection request sent!");
-        } catch (error) {
-            alert(`Error sending request: ${error.message}`);
-        }
-    };
 
     return (
         <div className="chat-dashboard-container">
@@ -201,7 +186,6 @@ const Dashboard = () => {
                 onRemoveFriend={handleRemoveFriend}
                 onSearchChange={(e) => setSearchQuery(e.target.value)}
                 searchResults={searchResults}
-                onConnectRequest={handleConnectRequest}
             />
             <ChatArea
                 currentChat={currentChat}

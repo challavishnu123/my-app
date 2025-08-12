@@ -46,6 +46,7 @@ const Profile = () => {
     if (!profile) return <div className="profile-container"><h1>Profile not found.</h1></div>;
 
     const isOwnProfile = user.username === username;
+    // Check if the current user's name is in the profile's connection list
     const isFriend = profile.connections?.includes(user.username);
 
     return (
@@ -58,6 +59,7 @@ const Profile = () => {
                         <button onClick={handleStartChat} className="action-button">Chat with {profile.name || username}</button>
                     )}
                     {!isOwnProfile && !isFriend && (
+                        // A more robust check for pending requests could be added here
                         <button onClick={handleConnect} className="action-button">Send Connect Request</button>
                     )}
                 </div>

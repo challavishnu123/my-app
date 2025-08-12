@@ -19,6 +19,11 @@ const Sidebar = () => {
                 <Link to="/dashboard" className={`nav-link ${location.pathname.startsWith('/dashboard') ? 'active' : ''}`}>
                     Chat
                 </Link>
+                {/* --- THIS IS THE FIX --- */}
+                {/* The missing "Feed" link has been added to the navigation. */}
+                <Link to="/feed" className={`nav-link ${location.pathname.startsWith('/feed') ? 'active' : ''}`}>
+                    Feed
+                </Link>
                 <Link to="/forum" className={`nav-link ${location.pathname.startsWith('/forum') ? 'active' : ''}`}>
                     Forum
                 </Link>
@@ -36,7 +41,7 @@ const Sidebar = () => {
             </nav>
             
             <div className="sidebar-footer">
-                <p>HuddleSpace v1.8</p>
+                <p>HuddleSpace v1.9</p>
             </div>
         </aside>
     );

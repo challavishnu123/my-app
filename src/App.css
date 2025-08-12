@@ -883,3 +883,179 @@
     border-top: 1px solid var(--border-color);
     margin: 2rem 0;
 }
+
+/* --- Image Feed Styles --- */
+.feed-container {
+    padding: 2rem;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+.post-list {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.post-card {
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: var(--surface-color);
+}
+.post-author {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+}
+.post-image {
+    width: 100%;
+    height: auto;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+.post-content {
+    padding: 1rem;
+}
+.post-actions {
+    display: flex;
+    gap: 1rem;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 0;
+}
+.like-btn.liked {
+    color: red;
+}
+.post-description {
+    margin: 0.5rem 0;
+}
+.post-comments p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+}
+.comment-form {
+    display: flex;
+    margin-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.75rem;
+}
+.comment-form input {
+    flex-grow: 1;
+    border: none;
+    background: none;
+    padding: 0.5rem;
+}
+.comment-form button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- Add these styles to the end of your App.css file --- */
+
+.post-author {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-post-btn {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.friends-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 1rem;
+}
+
+.friend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- Add these styles to the end of your App.css file --- */
+
+.shared-post-link {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Make the link a block to contain the card */
+}
+
+.shared-post-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background-color: #f1f5f9;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    margin-top: 0.5rem;
+    max-width: 280px;
+    transition: background-color 0.2s;
+}
+.shared-post-card:hover {
+    background-color: #e2e8f0;
+}
+
+/* Style for shared posts sent by the current user */
+.message-wrapper.sent .shared-post-card {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.message-wrapper.sent .shared-post-card:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+
+.shared-post-card img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    background-color: #e2e8f0;
+}
+
+.shared-post-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.shared-post-info strong {
+    font-size: 0.9rem;
+}
+
+.shared-post-info span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.message-wrapper.sent .shared-post-info span {
+    color: rgba(255, 255, 255, 0.7);
+}
