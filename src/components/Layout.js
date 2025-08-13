@@ -7,7 +7,6 @@ const Layout = () => {
     <div className="app-layout">
       <Sidebar />
       <main className="main-content">
-        {/* The Outlet is where your pages (Dashboard, Forum, etc.) will be rendered */}
         <Outlet />
       </main>
     </div>

@@ -8,12 +8,15 @@ import AdminPanel from './pages/AdminPanel';
 import ConnectionRequests from './pages/ConnectionRequests';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
-import Feed from './pages/Feed'; // Ensure Feed is imported
+import Feed from './pages/Feed';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
+import useAuth from './hooks/useAuth';
 import './App.css';
 
 function App() {
+  const { user } = useAuth();
+
   return (
     <div className="app-shell">
       <Routes>
@@ -22,8 +25,8 @@ function App() {
         
         {/* Protected routes that use the main layout */}
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-          {/* Default route redirects to the chat dashboard */}
-          <Route index element={<Navigate to="/dashboard" replace />} />
+          {/* Default route redirects to the user's own profile */}
+          <Route index element={user ? <Navigate to={`/profile/${user.username}`} replace /> : <Navigate to="/login" replace />} />
           
           {/* All main pages of your application */}
           <Route path="dashboard" element={<Dashboard />} />

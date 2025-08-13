@@ -6,42 +6,122 @@ const Sidebar = () => {
     const { user, logout } = useAuth();
     const location = useLocation();
 
+    const navigationItems = [
+        {
+            path: `/profile/${user.username}`,
+            label: 'Profile',
+            icon: '👤',
+            isActive: location.pathname.includes('/profile')
+        },
+        {
+            path: '/dashboard',
+            label: 'Chat',
+            icon: '💬',
+            isActive: location.pathname.startsWith('/dashboard')
+        },
+        {
+            path: '/feed',
+            label: 'Feed',
+            icon: '📸',
+            isActive: location.pathname.startsWith('/feed')
+        },
+        {
+            path: '/forum',
+            label: 'Forum',
+            icon: '❓',
+            isActive: location.pathname.startsWith('/forum')
+        },
+        {
+            path: '/connections',
+            label: 'Connections',
+            icon: '🤝',
+            isActive: location.pathname.startsWith('/connections')
+        },
+        {
+            path: '/settings',
+            label: 'Settings',
+            icon: '⚙️',
+            isActive: location.pathname.startsWith('/settings')
+        }
+    ];
+
+    // Add admin panel for faculty
+    if (user.userType === 'FACULTY') {
+        navigationItems.push({
+            path: '/admin',
+            label: 'Admin Panel',
+            icon: '🛡️',
+            isActive: location.pathname.startsWith('/admin')
+        });
+    }
+
+    const handleLogout = () => {
+        if (window.confirm('Are you sure you want to logout?')) {
+            logout();
+        }
+    };
+
     return (
         <aside className="sidebar">
             <header className="sidebar-header">
                 <Link to={`/profile/${user.username}`} className="sidebar-user-link">
-                    <div className="sidebar-user">{user.username}</div>
+                    <div className="sidebar-user">
+                        <div className="user-avatar">
+                            {user.username.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="user-info">
+                            <div className="user-name">{user.username}</div>
+                            <div className="user-type">{user.userType.toLowerCase()}</div>
+                        </div>
+                    </div>
                 </Link>
-                <button onClick={logout} title="Logout" className="logout-btn">Logout</button>
+                <button onClick={handleLogout} title="Logout" className="logout-btn">
+                    🚪
+                </button>
             </header>
 
             <nav className="sidebar-nav">
-                <Link to="/dashboard" className={`nav-link ${location.pathname.startsWith('/dashboard') ? 'active' : ''}`}>
-                    Chat
-                </Link>
-                {/* --- THIS IS THE FIX --- */}
-                {/* The missing "Feed" link has been added to the navigation. */}
-                <Link to="/feed" className={`nav-link ${location.pathname.startsWith('/feed') ? 'active' : ''}`}>
-                    Feed
-                </Link>
-                <Link to="/forum" className={`nav-link ${location.pathname.startsWith('/forum') ? 'active' : ''}`}>
-                    Forum
-                </Link>
-                <Link to="/connections" className={`nav-link ${location.pathname.startsWith('/connections') ? 'active' : ''}`}>
-                    Requests
-                </Link>
-                <Link to="/settings" className={`nav-link ${location.pathname.startsWith('/settings') ? 'active' : ''}`}>
-                    Settings
-                </Link>
-                {user.userType === 'FACULTY' && (
-                    <Link to="/admin" className={`nav-link ${location.pathname.startsWith('/admin') ? 'active' : ''}`}>
-                        Admin Panel
-                    </Link>
-                )}
+                <div className="nav-section">
+                    <div className="nav-section-title">Navigation</div>
+                    {navigationItems.map((item) => (
+                        <Link 
+                            key={item.path}
+                            to={item.path} 
+                            className={`nav-link ${item.isActive ? 'active' : ''}`}
+                        >
+                            <span className="nav-icon">{item.icon}</span>
+                            <span className="nav-label">{item.label}</span>
+                            {item.isActive && <span className="nav-indicator"></span>}
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Quick Actions Section */}
+                <div className="nav-section">
+                    <div className="nav-section-title">Quick Actions</div>
+                    <button className="quick-action-btn" title="New Message">
+                        <span className="nav-icon">✉️</span>
+                        <span className="nav-label">New Message</span>
+                    </button>
+                    <button className="quick-action-btn" title="Create Post">
+                        <span className="nav-icon">➕</span>
+                        <span className="nav-label">Create Post</span>
+                    </button>
+                </div>
             </nav>
             
             <div className="sidebar-footer">
-                <p>HuddleSpace v1.9</p>
+                <div className="app-info">
+                    <div className="app-logo">🏠</div>
+                    <div className="app-details">
+                        <div className="app-name">HuddleSpace</div>
+                        <div className="app-version">v2.0</div>
+                    </div>
+                </div>
+                <div className="status-indicator online">
+                    <span className="status-dot"></span>
+                    <span className="status-text">Online</span>
+                </div>
             </div>
         </aside>
     );

@@ -16,11 +16,25 @@ const Post = ({ post, onUpdate }) => {
     const thumbnailUrl = `${API_BASE_URL}/api/feed/images/${post.fileId}/thumbnail`;
     const fullImageUrl = `${API_BASE_URL}/api/feed/images/${post.fileId}`;
 
+    // Format timestamp
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diffInHours = (now - date) / (1000 * 60 * 60);
+        
+        if (diffInHours < 1) {
+            const diffInMinutes = Math.floor(diffInHours * 60);
+            return `${diffInMinutes}m ago`;
+        } else if (diffInHours < 24) {
+            return `${Math.floor(diffInHours)}h ago`;
+        } else {
+            return date.toLocaleDateString();
+        }
+    };
+
     const handleLike = async () => {
         try {
             await apiCall(`/api/feed/posts/${post.id}/like`, 'POST');
-            // --- THIS IS THE FIX ---
-            // After a successful like, call onUpdate() to re-fetch all posts.
             onUpdate();
         } catch (error) {
             console.error("Failed to like post:", error);
@@ -33,8 +47,6 @@ const Post = ({ post, onUpdate }) => {
         try {
             await apiCall(`/api/feed/posts/${post.id}/comment`, 'POST', { text: commentText });
             setCommentText('');
-            // --- THIS IS THE FIX ---
-            // After a successful comment, call onUpdate() to re-fetch all posts.
             onUpdate();
         } catch (error) {
             console.error("Failed to add comment:", error);
@@ -54,33 +66,63 @@ const Post = ({ post, onUpdate }) => {
     return (
         <>
             <div className="post-card">
+                {/* Post Header */}
                 <div className="post-author">
-                    {post.username}
+                    <div className="post-author-info">
+                        <div className="post-author-name">{post.username}</div>
+                        <div className="post-timestamp">{formatTimestamp(post.createdAt || new Date())}</div>
+                    </div>
                     {isOwner && (
-                        <button onClick={handleDelete} className="delete-post-btn">Delete</button>
+                        <button onClick={handleDelete} className="delete-post-btn">
+                            Delete
+                        </button>
                     )}
                 </div>
                 
+                {/* Post Description - Now ABOVE the image */}
+                <div className="post-description">
+                    <strong>{post.username}</strong> {post.description}
+                </div>
+
+                {/* Post Image */}
                 <a href={fullImageUrl} target="_blank" rel="noopener noreferrer">
                     <img src={thumbnailUrl} alt={post.description} className="post-image" />
                 </a>
 
+                {/* Post Content - Actions and Comments */}
                 <div className="post-content">
+                    {/* Post Actions */}
                     <div className="post-actions">
                         <button onClick={handleLike} className={`like-btn ${hasLiked ? 'liked' : ''}`}>
-                            ❤️ {post.likes.length}
+                            <span>❤️</span>
+                            <span>{post.likes.length} {post.likes.length === 1 ? 'like' : 'likes'}</span>
                         </button>
-                        <span>💬 {post.comments.length}</span>
-                        <button onClick={() => setShowShareModal(true)} className="share-btn">Share</button>
+                        <div className="comment-count">
+                            <span>💬</span>
+                            <span>{post.comments.length} {post.comments.length === 1 ? 'comment' : 'comments'}</span>
+                        </div>
+                        <button onClick={() => setShowShareModal(true)} className="share-btn">
+                            <span>📤</span>
+                            <span>Share</span>
+                        </button>
                     </div>
-                    <p className="post-description">
-                        <strong>{post.username}</strong> {post.description}
-                    </p>
+                    
+                    {/* Comments Display */}
                     <div className="post-comments">
-                        {post.comments.slice(-2).map((comment, index) => (
-                            <p key={index}><strong>{comment.username}</strong> {comment.text}</p>
+                        {post.comments.slice(-3).map((comment, index) => (
+                            <p key={index}>
+                                <strong>{comment.username}</strong> {comment.text}
+                            </p>
                         ))}
+                        
+                        {post.comments.length > 3 && (
+                            <p className="view-more-comments">
+                                View all {post.comments.length} comments
+                            </p>
+                        )}
                     </div>
+                    
+                    {/* Comment Form */}
                     <form onSubmit={handleComment} className="comment-form">
                         <input 
                             type="text" 
