@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { apiCall } from '../services/api';
 import Answer from './Answer';
 import useAuth from '../hooks/useAuth';
-
+import './Question.css';
 const Question = ({ question, initialAnswers, onDataChange }) => {
     const [answerText, setAnswerText] = useState('');
     const { user } = useAuth();

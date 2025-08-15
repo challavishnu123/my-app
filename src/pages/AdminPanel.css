@@ -1,0 +1,50 @@
+.admin-container {
+    padding: 2rem;
+}
+
+.user-list-table {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-top: 1.5rem;
+}
+
+.user-list-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-list-table th {
+  background: var(--gray-50);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--gray-700);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.user-list-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.user-list-table tr:hover {
+  background: var(--gray-50);
+}
+
+.delete-button {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.delete-button:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-1px);
+}

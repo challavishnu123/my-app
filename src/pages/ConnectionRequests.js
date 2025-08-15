@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiCall } from '../services/api';
-
+import './ConnectionRequests.css';
 const ConnectionRequests = () => {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);

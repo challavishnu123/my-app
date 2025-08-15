@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import useAuth from '../hooks/useAuth';
+import './Login.css';
 
 const Login = () => {
   const [authAction, setAuthAction] = useState('login'); // 'login' or 'register'

@@ -1,0 +1,32 @@
+/* Modern Feed UI (LinkedIn-style) */
+.feed-container {
+  padding: 2rem;
+  height: 100%;
+  overflow-y: auto;
+  background: var(--gray-50);
+}
+
+.feed-header {
+  background: var(--white);
+  padding: 1.5rem 2rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+
+.feed-header h1 {
+  color: var(--gray-800);
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.post-list {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

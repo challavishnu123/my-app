@@ -4,6 +4,7 @@ import useAuth from '../hooks/useAuth';
 import ChatArea from '../components/ChatArea';
 import { apiCall } from '../services/api';
 import { connectWebSocket, disconnectWebSocket, sendMessage, subscribeToGroup } from '../services/socket';
+import './Dashboard.css';
 
 const ChatList = ({ friends, groups, onSelectChat, currentChat, onRemoveFriend, onSearchChange, searchResults }) => (
     <div className="chat-list-panel">

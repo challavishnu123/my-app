@@ -3,6 +3,7 @@ import { apiCall } from '../services/api';
 import Question from '../components/Question';
 import AskQuestionModal from '../components/AskQuestionModal';
 import useAuth from '../hooks/useAuth';
+import './Forum.css';
 
 const Forum = () => {
     // --- THIS IS THE FIX ---

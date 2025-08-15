@@ -1,0 +1,41 @@
+.answer-card {
+  background: var(--gray-50);
+  padding: 1.25rem;
+  border-radius: var(--border-radius-sm);
+  margin-bottom: 1rem;
+  border: 1px solid var(--gray-200);
+}
+
+.answer-text {
+    line-height: 1.6;
+    color: var(--gray-800);
+}
+
+.answer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.vote-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.vote-controls button {
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: var(--transition);
+}
+
+.vote-controls button:hover {
+  background: var(--gray-50);
+  border-color: var(--primary);
+}

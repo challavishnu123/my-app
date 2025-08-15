@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { apiCall } from '../services/api';
-
+import './ChatArea.css';
 const ChatArea = ({ currentChat, messages, onSendMessage, onGroupAction, currentUser, groupMembers, onRemoveMember }) => {
     const [showMembers, setShowMembers] = useState(false);
 

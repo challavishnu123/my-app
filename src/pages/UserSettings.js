@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { apiCall } from '../services/api';
 import useAuth from '../hooks/useAuth';
-
+import './UserSettings.css';
 const UserSettings = () => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');

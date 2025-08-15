@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall } from '../services/api';
-
+import './AdminPanel.css';
 const AdminPanel = () => {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);

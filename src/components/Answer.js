@@ -1,6 +1,6 @@
 import React from 'react';
 import { apiCall } from '../services/api';
-
+import './Answer.css';
 const Answer = ({ answer, onDataChange }) => {
     
     const handleVote = async (isUpvote) => {

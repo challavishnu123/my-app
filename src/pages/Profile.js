@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { apiCall } from '../services/api';
 import useAuth from '../hooks/useAuth';
+import './Profile.css';
 
 const Profile = () => {
     const { username } = useParams();
@@ -78,6 +79,11 @@ const Profile = () => {
     const isOwnProfile = user.username === username;
     const isFriend = profile.connections?.includes(user.username);
 
+    // --- FINAL, MORE RELIABLE FIX ---
+    // Determine the user type by checking for the presence of a rollNumber.
+    // This is more reliable than the userType string from the API if it's inconsistent.
+    const displayUserType = profile.rollNumber ? 'Student' : 'Faculty';
+
     return (
         <div className="profile-container">
             {/* Profile Header */}
@@ -89,7 +95,7 @@ const Profile = () => {
                     <div className="profile-header-info">
                         <h1>{profile.name || username}</h1>
                         <p className="profile-title">
-                            {profile.userType === 'STUDENT' ? 'Student' : 'Faculty'} • {profile.department}
+                            {displayUserType} • {profile.department}
                         </p>
                         <div className="profile-stats">
                             <div className="stat">
@@ -197,7 +203,7 @@ const Profile = () => {
                 </div>
 
                 {/* Subjects Section for Faculty */}
-                {profile.subjects && profile.subjects.length > 0 && (
+                {displayUserType === 'Faculty' && profile.subjects && profile.subjects.length > 0 && (
                     <div className="profile-section">
                         <h3>Subjects</h3>
                         <div className="subjects-grid">

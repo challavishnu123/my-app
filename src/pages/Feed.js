@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { apiCall } from '../services/api';
 import Post from '../components/Post';
 import UploadModal from '../components/UploadModal';
+import './Feed.css';
 
 const Feed = () => {
     const [posts, setPosts] = useState([]);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { apiCall } from '../services/api';
 import useAuth from '../hooks/useAuth';
 import ShareModal from './ShareModal';
-
+import './Post.css';
 const API_BASE_URL = 'http://localhost:8080';
 
 const Post = ({ post, onUpdate }) => {

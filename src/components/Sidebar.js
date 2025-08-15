@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import './Sidebar.css';
 
 const Sidebar = () => {
     const { user, logout } = useAuth();
@@ -22,7 +23,7 @@ const Sidebar = () => {
         {
             path: '/feed',
             label: 'Feed',
-            icon: '📸',
+            icon: '',
             isActive: location.pathname.startsWith('/feed')
         },
         {
@@ -46,7 +47,7 @@ const Sidebar = () => {
     ];
 
     // Add admin panel for faculty
-    if (user.userType === 'FACULTY') {
+    if (user.userType?.toUpperCase() === 'FACULTY') {
         navigationItems.push({
             path: '/admin',
             label: 'Admin Panel',
@@ -71,7 +72,10 @@ const Sidebar = () => {
                         </div>
                         <div className="user-info">
                             <div className="user-name">{user.username}</div>
-                            <div className="user-type">{user.userType.toLowerCase()}</div>
+                            {/* FIX: Check userType value before displaying to ensure correctness */}
+                            <div className="user-type">
+                                {user.userType?.toUpperCase() === 'STUDENT' ? 'Student' : 'Faculty'}
+                            </div>
                         </div>
                     </div>
                 </Link>
