@@ -23,15 +23,38 @@ const SharedPost = ({ postId, postOwner, fileId }) => {
 
 const MessageList = ({ messages, currentUser }) => {
     const messagesEndRef = useRef(null);
+    const messagesContainerRef = useRef(null);
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ 
+                behavior: "smooth",
+                block: "end",
+                inline: "nearest"
+            });
+        }
     };
 
-    useEffect(scrollToBottom, [messages]);
+    useEffect(() => {
+        // Add a small delay to ensure DOM is updated
+        const timer = setTimeout(scrollToBottom, 100);
+        return () => clearTimeout(timer);
+    }, [messages]);
+
+    // Auto-scroll to bottom when new messages arrive
+    useEffect(() => {
+        if (messagesContainerRef.current) {
+            const container = messagesContainerRef.current;
+            const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100;
+            
+            if (isNearBottom) {
+                scrollToBottom();
+            }
+        }
+    }, [messages]);
 
     return (
-        <div className="messages-container">
+        <div className="messages-container" ref={messagesContainerRef}>
             {messages.map((msg, index) => {
                 const isSent = msg.senderId === currentUser;
                 const timestamp = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

@@ -1,5 +1,32 @@
 .settings-container {
     padding: 2rem;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--gray-50);
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-300) transparent;
+    scroll-behavior: smooth;
+    min-height: 0;
+}
+
+.settings-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.settings-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.settings-container::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.settings-container::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
 }
 
 .settings-card {

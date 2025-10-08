@@ -24,31 +24,36 @@ const ChatList = ({ friends, groups, onSelectChat, currentChat, onRemoveFriend, 
             </div>
         )}
 
-        <h3 className="list-header">Friends</h3>
-        {friends.map(friend => (
-             <div
-                key={friend}
-                className={`list-item ${currentChat?.type === 'private' && currentChat?.id === friend ? 'active' : ''}`}
-                onClick={() => onSelectChat(friend, 'private')}
-            >
-                <Link to={`/profile/${friend}`} className="friend-profile-link" onClick={e => e.stopPropagation()}>
-                    <div className="avatar">{friend.charAt(0).toUpperCase()}</div>
-                </Link>
-                <span className="item-name">{friend}</span>
-                <button onClick={(e) => { e.stopPropagation(); onRemoveFriend(friend); }} className="remove-chat-btn">×</button>
-            </div>
-        ))}
-        <h3 className="list-header">Groups</h3>
-        {groups.map(group => (
-            <div
-                key={group.groupId}
-                className={`list-item ${currentChat?.type === 'group' && currentChat?.id === group.groupId ? 'active' : ''}`}
-                onClick={() => onSelectChat(group.groupId, 'group', group.groupName)}
-            >
-                <div className="avatar">#</div>
-                <span className="item-name">{group.groupName}</span>
-            </div>
-        ))}
+        <div className="friends-list">
+            <h3 className="list-header">Friends</h3>
+            {friends.map(friend => (
+                 <div
+                    key={friend}
+                    className={`list-item ${currentChat?.type === 'private' && currentChat?.id === friend ? 'active' : ''}`}
+                    onClick={() => onSelectChat(friend, 'private')}
+                >
+                    <Link to={`/profile/${friend}`} className="friend-profile-link" onClick={e => e.stopPropagation()}>
+                        <div className="avatar">{friend.charAt(0).toUpperCase()}</div>
+                    </Link>
+                    <span className="item-name">{friend}</span>
+                    <button onClick={(e) => { e.stopPropagation(); onRemoveFriend(friend); }} className="remove-chat-btn">×</button>
+                </div>
+            ))}
+        </div>
+        
+        <div className="groups-list">
+            <h3 className="list-header">Groups</h3>
+            {groups.map(group => (
+                <div
+                    key={group.groupId}
+                    className={`list-item ${currentChat?.type === 'group' && currentChat?.id === group.groupId ? 'active' : ''}`}
+                    onClick={() => onSelectChat(group.groupId, 'group', group.groupName)}
+                >
+                    <div className="avatar">#</div>
+                    <span className="item-name">{group.groupName}</span>
+                </div>
+            ))}
+        </div>
     </div>
 );
 
