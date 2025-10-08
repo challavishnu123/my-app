@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall } from '../services/api';
 import './AdminPanel.css';
+
 const AdminPanel = () => {
     const [students, setStudents] = useState([]);
+    const [filteredStudents, setFilteredStudents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchStudents = async () => {
         try {
             const data = await apiCall('/faculty/students');
             setStudents(data.students);
+            setFilteredStudents(data.students);
         } catch (error) {
             console.error("Failed to fetch students:", error);
             alert("Could not load student data.");
@@ -20,6 +24,17 @@ const AdminPanel = () => {
     useEffect(() => {
         fetchStudents();
     }, []);
+
+    useEffect(() => {
+        if (searchQuery.trim() === '') {
+            setFilteredStudents(students);
+        } else {
+            const filtered = students.filter(student =>
+                student.rollNumber.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredStudents(filtered);
+        }
+    }, [searchQuery, students]);
 
     const handleDeleteStudent = async (rollNumber) => {
         if (!window.confirm(`Are you sure you want to delete the student: ${rollNumber}? This action cannot be undone.`)) {
@@ -36,11 +51,46 @@ const AdminPanel = () => {
         }
     };
 
-    if (loading) return <div>Loading student data...</div>;
+    if (loading) return <div className="loading-spinner">Loading student data...</div>;
 
     return (
         <div className="admin-container">
-            <h1>Admin Panel - Manage Students</h1>
+            <div className="admin-header">
+                <h1>Admin Panel - Manage Students</h1>
+                <div className="admin-stats">
+                    <div className="stat-card">
+                        <span className="stat-number">{students.length}</span>
+                        <span className="stat-label">Total Students</span>
+                    </div>
+                    <div className="stat-card">
+                        <span className="stat-number">{filteredStudents.length}</span>
+                        <span className="stat-label">Filtered Results</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div className="search-bar-container">
+                <div className="search-input-wrapper">
+                    <span className="search-icon">🔍</span>
+                    <input
+                        type="text"
+                        placeholder="Search students by roll number..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="student-search-input"
+                    />
+                    {searchQuery && (
+                        <button 
+                            className="clear-search-btn"
+                            onClick={() => setSearchQuery('')}
+                            title="Clear search"
+                        >
+                            ✕
+                        </button>
+                    )}
+                </div>
+            </div>
+
             <div className="user-list-table">
                 <table>
                     <thead>
@@ -50,19 +100,27 @@ const AdminPanel = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {students.map(student => (
-                            <tr key={student.rollNumber}>
-                                <td>{student.rollNumber}</td>
-                                <td>
-                                    <button 
-                                        className="delete-button"
-                                        onClick={() => handleDeleteStudent(student.rollNumber)}
-                                    >
-                                        Delete
-                                    </button>
+                        {filteredStudents.length > 0 ? (
+                            filteredStudents.map(student => (
+                                <tr key={student.rollNumber}>
+                                    <td>{student.rollNumber}</td>
+                                    <td>
+                                        <button 
+                                            className="delete-button"
+                                            onClick={() => handleDeleteStudent(student.rollNumber)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="2" className="no-results">
+                                    {searchQuery ? `No students found matching "${searchQuery}"` : 'No students found'}
                                 </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>

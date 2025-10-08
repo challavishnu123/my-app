@@ -1,11 +1,13 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import './Sidebar.css';
 
 const Sidebar = () => {
     const { user, logout } = useAuth();
     const location = useLocation();
+    const navigate = useNavigate();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const navigationItems = [
         {
@@ -23,7 +25,7 @@ const Sidebar = () => {
         {
             path: '/feed',
             label: 'Feed',
-            icon: '',
+            icon: '📰',
             isActive: location.pathname.startsWith('/feed')
         },
         {
@@ -62,8 +64,60 @@ const Sidebar = () => {
         }
     };
 
+    const handleNewMessage = () => {
+        navigate('/dashboard');
+        setIsMobileMenuOpen(false);
+    };
+
+    const handleCreatePost = () => {
+        navigate('/feed');
+        setIsMobileMenuOpen(false);
+    };
+
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const closeMobileMenu = () => {
+        setIsMobileMenuOpen(false);
+    };
+
+    // Close mobile menu when route changes
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [location.pathname]);
+
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMobileMenuOpen]);
+
     return (
-        <aside className="sidebar">
+        <>
+            {/* Mobile Menu Toggle Button */}
+            <button 
+                className="mobile-menu-toggle" 
+                onClick={toggleMobileMenu}
+                aria-label="Toggle mobile menu"
+            >
+                {isMobileMenuOpen ? '✕' : '☰'}
+            </button>
+
+            {/* Mobile Overlay */}
+            <div 
+                className={`mobile-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+                onClick={closeMobileMenu}
+            ></div>
+
+            <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
             <header className="sidebar-header">
                 <Link to={`/profile/${user.username}`} className="sidebar-user-link">
                     <div className="sidebar-user">
@@ -103,11 +157,11 @@ const Sidebar = () => {
                 {/* Quick Actions Section */}
                 <div className="nav-section">
                     <div className="nav-section-title">Quick Actions</div>
-                    <button className="quick-action-btn" title="New Message">
+                    <button className="quick-action-btn" title="New Message" onClick={handleNewMessage}>
                         <span className="nav-icon">✉️</span>
                         <span className="nav-label">New Message</span>
                     </button>
-                    <button className="quick-action-btn" title="Create Post">
+                    <button className="quick-action-btn" title="Create Post" onClick={handleCreatePost}>
                         <span className="nav-icon">➕</span>
                         <span className="nav-label">Create Post</span>
                     </button>
@@ -128,6 +182,7 @@ const Sidebar = () => {
                 </div>
             </div>
         </aside>
+        </>
     );
 };
 
