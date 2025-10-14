@@ -17,11 +17,12 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // ✅ Common authentication handler
+  // Common authentication handler
   const handleAuth = async (endpoint, credentials) => {
     try {
       const response = await apiCall(endpoint, "POST", credentials);
 
+      // backend returns token + student/faculty data
       const username =
         response?.student?.rollNumber ||
         response?.faculty?.facultyId ||
@@ -46,44 +47,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Fixed login endpoint
+  // ---- FIXED ENDPOINTS ----
   const login = (credentials) => {
     const endpoint = `/${credentials.userType.toLowerCase()}/login`;
-    let payload = {};
-
-    if (credentials.userType === "Student") {
-      payload = {
-        rollNumber: credentials.username,
-        password: credentials.password,
-      };
-    } else if (credentials.userType === "Faculty") {
-      payload = {
-        facultyId: credentials.username,
-        password: credentials.password,
-      };
-    }
-
-    return handleAuth(endpoint, payload);
+    return handleAuth(endpoint, {
+      rollNumber: credentials.username,
+      password: credentials.password,
+    });
   };
 
-  // ✅ Fixed register endpoint
   const register = (credentials) => {
     const endpoint = `/${credentials.userType.toLowerCase()}/register`;
-    let payload = {};
-
-    if (credentials.userType === "Student") {
-      payload = {
-        rollNumber: credentials.username,
-        password: credentials.password,
-      };
-    } else if (credentials.userType === "Faculty") {
-      payload = {
-        facultyId: credentials.username,
-        password: credentials.password,
-      };
-    }
-
-    return handleAuth(endpoint, payload);
+    return handleAuth(endpoint, {
+      rollNumber: credentials.username,
+      password: credentials.password,
+    });
   };
 
   const logout = () => {
