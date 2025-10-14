@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = "https://backendv-g1ln.onrender.com";
 
 /**
  * A generic function to make API calls to the backend.
@@ -8,14 +8,14 @@ const API_BASE_URL = 'http://localhost:8080';
  * @param {object|null} body - The request body for POST/PUT requests.
  * @returns {Promise<any>} - The JSON response from the server.
  */
-export const apiCall = async (endpoint, method = 'GET', body = null) => {
-  const token = sessionStorage.getItem('jwtToken');
+export const apiCall = async (endpoint, method = "GET", body = null) => {
+  const token = sessionStorage.getItem("jwtToken");
   const headers = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const config = {
@@ -29,18 +29,18 @@ export const apiCall = async (endpoint, method = 'GET', body = null) => {
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    
+
     // Handle responses that might not have a JSON body
     const contentType = response.headers.get("content-type");
     let data;
     if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await response.json();
+      data = await response.json();
     } else {
-        data = await response.text();
+      data = await response.text();
     }
 
     if (!response.ok) {
-      throw new Error(data.message || 'An API error occurred');
+      throw new Error(data.message || "An API error occurred");
     }
 
     return data;
