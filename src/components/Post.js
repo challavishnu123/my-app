@@ -6,22 +6,25 @@ import './Post.css';
 const API_BASE_URL = 'http://localhost:8080';
 
 const Post = ({ post, onUpdate }) => {
-    const { user } = useAuth();
+    const { user } = useAuth(); // Hook to get current user info
     const [commentText, setCommentText] = useState('');
     const [showShareModal, setShowShareModal] = useState(false);
-    
+
+    // Check if the current user has liked this post
     const hasLiked = post.likes.includes(user.username);
-    const isOwner = post.username === user.username;
-    
+    // Check if the current user is the owner of this post
+    const isOwner = post.username === user.username; // <-- Ownership check for delete button
+
+    // Construct image URLs
     const thumbnailUrl = `${API_BASE_URL}/api/feed/images/${post.fileId}/thumbnail`;
     const fullImageUrl = `${API_BASE_URL}/api/feed/images/${post.fileId}`;
 
-    // Format timestamp
+    // Format timestamp for display
     const formatTimestamp = (timestamp) => {
         const date = new Date(timestamp);
         const now = new Date();
         const diffInHours = (now - date) / (1000 * 60 * 60);
-        
+
         if (diffInHours < 1) {
             const diffInMinutes = Math.floor(diffInHours * 60);
             return `${diffInMinutes}m ago`;
@@ -32,37 +35,44 @@ const Post = ({ post, onUpdate }) => {
         }
     };
 
+    // Handler for liking/unliking a post
     const handleLike = async () => {
         try {
             await apiCall(`/api/feed/posts/${post.id}/like`, 'POST');
-            onUpdate();
+            onUpdate(); // Refresh feed data
         } catch (error) {
             console.error("Failed to like post:", error);
         }
     };
 
+    // Handler for submitting a comment
     const handleComment = async (e) => {
         e.preventDefault();
         if (!commentText.trim()) return;
         try {
             await apiCall(`/api/feed/posts/${post.id}/comment`, 'POST', { text: commentText });
-            setCommentText('');
-            onUpdate();
+            setCommentText(''); // Clear comment input
+            onUpdate(); // Refresh feed data
         } catch (error) {
             console.error("Failed to add comment:", error);
         }
     };
 
+    // --- DELETE FUNCTIONALITY ---
+    // Handler for deleting a post
     const handleDelete = async () => {
+        // Ask for confirmation before deleting
         if (!window.confirm("Are you sure you want to delete this post?")) return;
         try {
+            // Call the backend DELETE endpoint
             await apiCall(`/api/feed/posts/${post.id}`, 'DELETE');
-            onUpdate();
+            onUpdate(); // Refresh feed data to remove the post
         } catch (error) {
-            alert(`Failed to delete post: ${error.message}`);
+            alert(`Failed to delete post: ${error.message}`); // Show error if deletion fails
         }
     };
-    
+    // --- END DELETE FUNCTIONALITY ---
+
     return (
         <>
             <div className="post-card">
@@ -72,14 +82,16 @@ const Post = ({ post, onUpdate }) => {
                         <div className="post-author-name">{post.username}</div>
                         <div className="post-timestamp">{formatTimestamp(post.createdAt || new Date())}</div>
                     </div>
-                    {isOwner && (
+                    {/* --- DELETE BUTTON (Conditionally Rendered) --- */}
+                    {isOwner && ( // Only show button if the current user is the owner
                         <button onClick={handleDelete} className="delete-post-btn">
                             Delete
                         </button>
                     )}
+                    {/* --- END DELETE BUTTON --- */}
                 </div>
-                
-                {/* Post Description - Now ABOVE the image */}
+
+                {/* Post Description */}
                 <div className="post-description">
                     <strong>{post.username}</strong> {post.description}
                 </div>
@@ -91,7 +103,7 @@ const Post = ({ post, onUpdate }) => {
 
                 {/* Post Content - Actions and Comments */}
                 <div className="post-content">
-                    {/* Post Actions */}
+                    {/* Post Actions (Like, Comment Count, Share) */}
                     <div className="post-actions">
                         <button onClick={handleLike} className={`like-btn ${hasLiked ? 'liked' : ''}`}>
                             <span>❤️</span>
@@ -106,26 +118,26 @@ const Post = ({ post, onUpdate }) => {
                             <span>Share</span>
                         </button>
                     </div>
-                    
+
                     {/* Comments Display */}
                     <div className="post-comments">
-                        {post.comments.slice(-3).map((comment, index) => (
+                        {post.comments.slice(-3).map((comment, index) => ( // Show latest 3 comments
                             <p key={index}>
                                 <strong>{comment.username}</strong> {comment.text}
                             </p>
                         ))}
-                        
-                        {post.comments.length > 3 && (
+
+                        {post.comments.length > 3 && ( // Option to view more comments if needed
                             <p className="view-more-comments">
                                 View all {post.comments.length} comments
                             </p>
                         )}
                     </div>
-                    
+
                     {/* Comment Form */}
                     <form onSubmit={handleComment} className="comment-form">
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             placeholder="Add a comment..."
                             value={commentText}
                             onChange={e => setCommentText(e.target.value)}
@@ -134,9 +146,10 @@ const Post = ({ post, onUpdate }) => {
                     </form>
                 </div>
             </div>
-            
+
+            {/* Share Modal */}
             {showShareModal && (
-                <ShareModal 
+                <ShareModal
                     post={post}
                     onClose={() => setShowShareModal(false)}
                 />

@@ -39,9 +39,23 @@ export const AuthProvider = ({ children }) => {
     return handleAuth(endpoint, { username: credentials.username, password: credentials.password });
   };
 
-  const register = (credentials) => {
+  // --- THIS FUNCTION IS MODIFIED ---
+  const register = async (credentials) => {
     const endpoint = `/auth/${credentials.userType.toLowerCase()}/register`;
-    return handleAuth(endpoint, { username: credentials.username, password: credentials.password });
+    try {
+      // Make the API call but do NOT log the user in or redirect
+      const response = await apiCall(endpoint, 'POST', { username: credentials.username, password: credentials.password });
+      
+      // Use the backend message if available, or a generic one
+      const successMessage = (typeof response === 'string' && response.includes('created')) 
+        ? response 
+        : `Successfully created login for ${credentials.username}`;
+
+      return { success: true, message: successMessage };
+    } catch (error) {
+      console.error('Registration failed:', error);
+      return { success: false, message: error.message };
+    }
   };
 
   const logout = () => {

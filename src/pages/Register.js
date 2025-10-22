@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
 import useAuth from '../hooks/useAuth';
-import './Login.css';
+import './Login.css'; // Assuming styles are shared
+import { useNavigate } from 'react-router-dom'; // 1. IMPORT useNavigate
 
-const Login = () => {
-  const [authAction, setAuthAction] = useState('login'); // 'login' or 'register'
+/**
+ * Registration Component
+ * @param {object} props
+ * @param {function} props.onNavigateToLogin - Optional function to switch view to Login
+ */
+// 2. REMOVE onNavigateToLogin prop
+const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('STUDENT');
   const [status, setStatus] = useState({ message: '', error: false });
-  const { login} = useAuth();
+  const { register } = useAuth(); // Only need the register function
+  const navigate = useNavigate(); // 3. INITIALIZE useNavigate
 
-  const handleAuthAction = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     if (!username || !password) {
       setStatus({ message: 'Username and password are required.', error: true });
@@ -20,11 +27,24 @@ const Login = () => {
     setStatus({ message: 'Processing...', error: false });
     const credentials = { username, password, userType };
     
-    const result = await login(credentials);
+    // Only call register
+    const result = await register(credentials);
 
     if (!result.success) {
       setStatus({ message: result.message, error: true });
+    } else {
+      // --- 4. THIS IS THE FIX ---
+      // On success, show message and clear the form
+      setStatus({ message: result.message, error: false });
+      setUsername('');
+      setPassword('');
+      // The user is NOT logged in or redirected.
     }
+  };
+
+  // 5. ADDED this handler
+  const handleGoToLogin = () => {
+    navigate('/login'); // Navigate to the main login page
   };
 
   return (
@@ -32,21 +52,11 @@ const Login = () => {
       <div className="auth-container">
         <div className="auth-header">
           <h1>HuddleSpace</h1>
-          <p>Connect and collaborate instantly.</p>
+          <p>Create your account.</p>
         </div>
 
-        <form className="auth-form" onSubmit={handleAuthAction}>
-          <div className="auth-tabs">
-            <button
-              type="button"
-              className={authAction === 'login' ? 'active' : ''}
-              onClick={() => setAuthAction('login')}
-            >
-              Login
-            </button>
-            
-          </div>
-
+        <form className="auth-form" onSubmit={handleRegister}>
+          {/* Tabs are removed as this component is only for registration */}
           <div className="auth-inputs">
             <input
               type="text"
@@ -60,14 +70,15 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {/* Consider adding a "Confirm Password" input for better UX */}
             <select value={userType} onChange={(e) => setUserType(e.target.value)}>
               <option value="STUDENT">Student</option>
-              <option value="FACULTY">Faculty</option>
+              {/*<option value="FACULTY">Faculty</option>*/}
             </select>
           </div>
 
           <button type="submit" className="auth-button">
-            {authAction === 'login' ? 'Login' : 'Register'}
+            Register
           </button>
 
           {status.message && (
@@ -75,10 +86,12 @@ const Login = () => {
               {status.message}
             </div>
           )}
+
+          {/* 6. MODIFIED this button */}
         </form>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

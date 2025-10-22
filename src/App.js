@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import useAuth from './hooks/useAuth';
 import './App.css';
+import Register from './pages/Register';
 
 function App() {
   const { user } = useAuth();
@@ -37,6 +38,10 @@ function App() {
           <Route path="connections" element={<ConnectionRequests />} />
           <Route path="profile/edit" element={<EditProfile />} />
           <Route path="profile/:username" element={<Profile />} />
+          
+          {/* --- THIS IS THE FIX --- */}
+          {/* Changed path from "Register" to "admin/register" */}
+          <Route path="admin/register" element={<Register />} />
         </Route>
 
         {/* Fallback for any other URL */}

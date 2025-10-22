@@ -37,8 +37,19 @@
   margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.admin-header-left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: flex-start;
   gap: 1rem;
 }
 
@@ -46,12 +57,13 @@
   color: var(--gray-800);
   font-size: 1.75rem;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 1.5rem 0;
 }
 
 .admin-stats {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .stat-card {
@@ -77,6 +89,42 @@
   opacity: 0.9;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.admin-action-btn {
+  background: linear-gradient(135deg, var(--success) 0%, #22c55e 100%);
+  color: var(--white);
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow);
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.admin-action-btn:hover {
+  background: linear-gradient(135deg, #22c55e 0%, var(--success) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-action-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow);
+}
+
+.admin-action-btn::before {
+  content: "👤";
+  font-size: 1rem;
 }
 
 .search-bar-container {
@@ -215,11 +263,31 @@
   .admin-header {
     flex-direction: column;
     align-items: stretch;
+    text-align: left;
+    gap: 1.5rem;
+  }
+  
+  .admin-header-left {
+    min-width: unset;
+  }
+  
+  .admin-header h1 {
+    margin-bottom: 1rem;
     text-align: center;
   }
   
   .admin-stats {
     justify-content: center;
+  }
+  
+  .admin-header-actions {
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .admin-action-btn {
+    width: 100%;
+    max-width: 300px;
   }
   
   .search-input-wrapper {
@@ -232,5 +300,31 @@
   
   .user-list-table table {
     min-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header {
+    padding: 1.5rem;
+  }
+  
+  .admin-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .admin-stats {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .stat-card {
+    min-width: unset;
+    width: 100%;
+    padding: 0.875rem 1rem;
+  }
+  
+  .admin-action-btn {
+    padding: 1rem;
+    font-size: 1rem;
   }
 }

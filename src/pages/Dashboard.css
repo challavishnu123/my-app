@@ -344,3 +344,50 @@
     font-size: 0.6875rem;
   }
 }
+
+/* ... existing styles ... */
+
+.list-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 0.5rem; /* Add some padding so button isn't against the edge */
+     /* Make header sticky */
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 1;
+}
+
+.create-group-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem; /* Make the '+' bigger */
+    font-weight: bold;
+    color: var(--primary);
+    cursor: pointer;
+    padding: 0 0.5rem; /* Adjust padding */
+    line-height: 1;
+    border-radius: 50%;
+    width: 30px; /* Give it a fixed size */
+    height: 30px; /* Give it a fixed size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.create-group-btn:hover {
+    background-color: rgba(10, 102, 194, 0.1); /* Light blue background on hover */
+}
+
+/* Ensure list header within the container doesn't take full width */
+.list-header-container .list-header {
+   flex-grow: 1;
+   position: static; /* Override sticky if needed inside flex */
+   padding-right: 0; /* Remove padding if added previously */
+}
+
+
+
+/* ... rest of your styles ... */

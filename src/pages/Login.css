@@ -22,6 +22,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
@@ -120,6 +121,67 @@
   border: 1px solid rgba(66, 184, 131, 0.2);
 }
 
+/* Auth Actions for Register Page */
+.auth-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.auth-secondary-btn {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border: 2px solid var(--gray-300);
+  background: var(--white);
+  color: var(--gray-700);
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-secondary-btn:hover:not(:disabled) {
+  background: var(--gray-50);
+  border-color: var(--gray-400);
+  transform: translateY(-1px);
+}
+
+.auth-secondary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-submit {
+  flex: 2;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-submit:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Mobile Responsive Design */
 @media (max-width: 768px) {
   .auth-view {
@@ -164,14 +226,26 @@
     font-size: 0.875rem;
   }
   
-  .form-group input {
+  .form-group input,
+  .form-group select {
     padding: 0.875rem 1rem;
     font-size: 16px; /* Prevent zoom on iOS */
   }
   
-  .auth-submit {
+  .auth-submit,
+  .auth-secondary-btn {
     padding: 0.875rem;
     font-size: 1rem;
+  }
+  
+  .auth-actions {
+    flex-direction: column;
+  }
+  
+  .auth-secondary-btn,
+  .auth-submit {
+    flex: none;
+    width: 100%;
   }
 }
 

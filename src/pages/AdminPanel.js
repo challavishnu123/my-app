@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall } from '../services/api';
 import './AdminPanel.css';
+import { useNavigate } from 'react-router-dom';
 
 const AdminPanel = () => {
     const [students, setStudents] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate(); // Add this line
 
     const fetchStudents = async () => {
         try {
@@ -51,21 +53,39 @@ const AdminPanel = () => {
         }
     };
 
+    const handleRegisterClick = () => {
+        console.log("Register button clicked, navigating...");
+        navigate('/admin/register');
+    };
+
     if (loading) return <div className="loading-spinner">Loading student data...</div>;
 
     return (
         <div className="admin-container">
             <div className="admin-header">
-                <h1>Admin Panel - Manage Students</h1>
-                <div className="admin-stats">
-                    <div className="stat-card">
-                        <span className="stat-number">{students.length}</span>
-                        <span className="stat-label">Total Students</span>
+                <div className="admin-header-left">
+                    <h1>Admin Panel - Manage Students</h1>
+                    <div className="admin-stats">
+                        <div className="stat-card">
+                            <span className="stat-number">{students.length}</span>
+                            <span className="stat-label">Total Students</span>
+                        </div>
+                        <div className="stat-card">
+                            <span className="stat-number">{filteredStudents.length}</span>
+                            <span className="stat-label">Filtered Results</span>
+                        </div>
                     </div>
-                    <div className="stat-card">
-                        <span className="stat-number">{filteredStudents.length}</span>
-                        <span className="stat-label">Filtered Results</span>
-                    </div>
+                </div>
+                
+                <div className="admin-header-actions">
+                    <button
+                        type="button"
+                        className="admin-action-btn"
+                        onClick={handleRegisterClick}
+                        title="Register new student"
+                    >
+                        Register Student
+                    </button>
                 </div>
             </div>
             

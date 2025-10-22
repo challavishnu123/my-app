@@ -1,0 +1,129 @@
+/* Basic Modal Styles - Add to src/components/Modal.css */
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Darker backdrop */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out; /* Fade in animation */
+}
+
+.modal-content {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 500px; /* Limit max width */
+  max-height: 90vh; /* Limit max height */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+  box-shadow: var(--shadow-lg);
+  animation: modalSlide 0.3s ease-out; /* Slide in animation */
+}
+
+/* Add styles for form-group, error-message, modal-actions if needed,
+   or ensure they are defined globally (e.g., in App.css) */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius-sm);
+  margin-top: 1rem; /* Add margin-top */
+  margin-bottom: 1rem; /* Add margin-bottom */
+  font-size: 0.875rem;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.modal-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+/* Style for Cancel button */
+.modal-actions button[type="button"] {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+}
+
+.modal-actions button[type="button"]:hover {
+  background: var(--gray-200);
+}
+
+/* Style for Submit/Action button (inherits from .action-button potentially) */
+.modal-actions .action-button {
+   /* Styles might be inherited from App.css or define here */
+   background: var(--primary);
+   color: var(--white);
+   border: none;
+}
+.modal-actions .action-button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+.modal-actions .action-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none; /* Prevent hover effect when disabled */
+    box-shadow: none; /* Prevent hover effect when disabled */
+}
+
+/* Animations (Optional) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlide {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
