@@ -1,92 +1,126 @@
-import React, { useState } from 'react';
+// src/components/AddMemberModal.js
+import React, { useState, useEffect } from 'react';
 import { apiCall } from '../services/api';
-import './Modal.css'; // Assuming you have this file for general modal styles
+import useAuth from '../hooks/useAuth'; // Import useAuth
+import './Modal.css'; // General modal styles
+import './AddMemberModal.css'; // Specific styles for this modal
 
-const CreateGroupModal = ({ onClose, onGroupCreated }) => {
-    const [groupName, setGroupName] = useState('');
-    // --- UPDATED: Default to GENERAL, limit options ---
-    const [groupType, setGroupType] = useState('GENERAL');
-    const [description, setDescription] = useState('');
+const AddMemberModal = ({ groupId, currentMembers, onClose, onAddMember }) => {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [loadingSearch, setLoadingSearch] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [adding, setAdding] = useState(false);
+    const { user } = useAuth(); // Get current user info
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!groupName.trim()) {
-            setError('Group name is required.');
+    // Debounced search effect
+    useEffect(() => {
+        const performSearch = async () => {
+            const query = searchQuery.trim();
+            if (query === '') {
+                setSearchResults([]);
+                setSelectedUser(null); // Clear selection if query is cleared
+                return;
+            }
+            setLoadingSearch(true);
+            setError('');
+            try {
+                const results = await apiCall(`/api/users/search?query=${encodeURIComponent(query)}`);
+                // Filter out current user, existing members, and ensure results is an array
+                const filteredResults = Array.isArray(results) ? results.filter(
+                    u => u.username !== user?.username && !currentMembers.includes(u.username)
+                ) : [];
+                setSearchResults(filteredResults);
+            } catch (err) {
+                setError('Search failed. Please try again.');
+                setSearchResults([]);
+            } finally {
+                setLoadingSearch(false);
+            }
+        };
+
+        const timeoutId = setTimeout(performSearch, 300); // Debounce search
+        return () => clearTimeout(timeoutId);
+    }, [searchQuery, currentMembers, user?.username]); // Add dependencies
+
+    const handleSelectUser = (userResult) => {
+        setSelectedUser(userResult);
+        setSearchQuery(userResult.username); // Fill input with selected user
+        setSearchResults([]); // Hide dropdown after selection
+    };
+
+    const handleAddClick = async () => {
+        if (!selectedUser) {
+            setError('Please select a user to add.');
             return;
         }
+        setAdding(true);
         setError('');
-        setLoading(true);
-
         try {
-            const payload = {
-                groupName: groupName.trim(),
-                groupType, // Will be GENERAL or SUBJECT
-                description: description.trim()
-            };
-            await apiCall('/api/chat/groups', 'POST', payload);
-            alert('Group created successfully!');
-            onGroupCreated(); // Notify dashboard to refresh group list
-            onClose(); // Close the modal
+            // Call the onAddMember prop passed from Dashboard
+            await onAddMember(selectedUser.username);
+            // onClose(); // Let the Dashboard handle closing after success if needed
         } catch (err) {
-            setError(err.message || 'Failed to create group. Please try again.');
-            console.error("Group creation failed:", err);
-        } finally {
-            setLoading(false);
+            setError(err.message || 'Failed to add member.');
+            setAdding(false); // Stop loading indicator on error
         }
+        // No finally block needed here if Dashboard handles closing
     };
 
     return (
         <div className="modal-backdrop">
-            <div className="modal-content">
-                <h2>Create New Group</h2>
-                <form onSubmit={handleSubmit}>
-                    {/* Group Name Input */}
+            <div className="modal-content add-member-modal-content"> {/* Optional specific class */}
+                <h2>Add Member to Group</h2>
+                <form onSubmit={(e) => { e.preventDefault(); handleAddClick(); }}>
                     <div className="form-group">
-                        <label htmlFor="groupName">Group Name</label>
+                        <label htmlFor="userSearch">Search User</label>
                         <input
                             type="text"
-                            id="groupName"
-                            value={groupName}
-                            onChange={(e) => setGroupName(e.target.value)}
-                            required
-                            disabled={loading}
+                            id="userSearch"
+                            placeholder="Enter username (Roll No / Faculty ID)"
+                            value={searchQuery}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setSelectedUser(null); // Clear selection when typing
+                            }}
+                            disabled={adding}
+                            autoComplete="off" // Prevent browser autocomplete interference
                         />
+                        {loadingSearch && <p className="search-loading-text">Searching...</p>}
+                        {/* Search Results Dropdown */}
+                        {searchResults.length > 0 && !selectedUser && (
+                             <div className="search-results-dropdown">
+                                {searchResults.map(result => (
+                                    <div
+                                        key={result.username}
+                                        className="search-result-item"
+                                        onClick={() => handleSelectUser(result)}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleSelectUser(result)} // Allow keyboard selection
+                                        tabIndex={0} // Make it focusable
+                                    >
+                                        {result.username} ({result.userType})
+                                    </div>
+                                ))}
+                             </div>
+                        )}
+                        {searchQuery && !loadingSearch && searchResults.length === 0 && !selectedUser && (
+                            <p className="no-results-text">No eligible users found.</p>
+                        )}
                     </div>
-                    {/* Group Type Select (Limited Options) */}
-                    <div className="form-group">
-                        <label htmlFor="groupType">Group Type</label>
-                        <select
-                            id="groupType"
-                            value={groupType}
-                            onChange={(e) => setGroupType(e.target.value)}
-                            disabled={loading}
-                        >
-                            {/* --- ONLY THESE OPTIONS --- */}
-                            <option value="GENERAL">General</option>
-                            <option value="SUBJECT">Subject</option>
-                            {/* --- END OPTIONS --- */}
-                        </select>
-                    </div>
-                    {/* Description Textarea */}
-                    <div className="form-group">
-                        <label htmlFor="description">Description (Optional)</label>
-                        <textarea
-                            id="description"
-                            rows="3"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            disabled={loading}
-                        ></textarea>
-                    </div>
-                    {/* Error Message */}
+
                     {error && <p className="error-message">{error}</p>}
-                    {/* Modal Actions */}
+
                     <div className="modal-actions">
-                        <button type="button" onClick={onClose} disabled={loading}>Cancel</button>
-                        <button type="submit" className="action-button" disabled={loading}>
-                            {loading ? 'Creating...' : 'Create Group'}
+                        <button type="button" onClick={onClose} disabled={adding}>
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="action-button"
+                            disabled={adding || !selectedUser} // Disable if no user selected or adding
+                        >
+                            {adding ? 'Adding...' : 'Add Member'}
                         </button>
                     </div>
                 </form>
@@ -95,4 +129,4 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
     );
 };
 
-export default CreateGroupModal;
+export default AddMemberModal;

@@ -474,3 +474,25 @@ body {
 .mt-4 {
   margin-top: 1rem;
 }
+
+/* --- REPLACE your existing .app-shell class with this one --- */
+.app-shell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+  
+  /* --- ADDED BACKGROUND STYLES --- */
+  background-image: url('D:\PROJECT\my-app\public\Gemini_Generated_Image_ic4jj0ic4jj0ic4j.png'); /* Path from /public folder */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* This adds a dark overlay to make the form stand out */
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: darken;
+
+  /* --- MODIFIED PADDING --- */
+  padding: 0; /* Remove old padding to fill the screen */
+}

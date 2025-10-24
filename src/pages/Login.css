@@ -1,16 +1,35 @@
-/* Modern Authentication UI */
+/* Modern Authentication UI - Transparent Glassmorphism */
 .auth-view {
   width: 100%;
   max-width: 440px;
+  padding: 1rem; /* Add some padding for smaller screens */
 }
 
 .auth-container {
-  background: var(--white);
+  /* --- TRANSPARENCY SETTINGS --- */
+  background: rgba(30, 30, 30, 0.45); /* Dark transparent background */
+  backdrop-filter: blur(20px); /* Stronger blur for glass effect */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Brighter border */
+  /* --- END TRANSPARENCY --- */
+  
   padding: 2.5rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+}
+
+.scrolling-title {
+  width: 100%;
+  /* --- TRANSPARENCY SETTINGS --- */
+  background: rgba(255, 255, 255, 0.1); /* Transparent background */
+  color: var(--white); /* White text */
+  /* --- END TRANSPARENCY --- */
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 0.25rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  overflow: hidden;
 }
 
 .auth-header {
@@ -21,7 +40,8 @@
 .auth-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  /* Brighter gradient for dark background */
+  background: linear-gradient(135deg, #4dabf7 0%, #a5d8ff 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -29,13 +49,16 @@
 }
 
 .auth-header p {
-  color: var(--gray-600);
+  /* --- TEXT COLOR UPDATED --- */
+  color: var(--gray-200); /* Light gray text */
   font-size: 1.1rem;
 }
 
 .auth-tabs {
   display: flex;
-  background: var(--gray-100);
+  /* --- TRANSPARENCY SETTINGS --- */
+  background: rgba(0, 0, 0, 0.2); /* Darker transparent background */
+  /* --- END TRANSPARENCY --- */
   border-radius: var(--border-radius-sm);
   padding: 4px;
   margin-bottom: 1.5rem;
@@ -48,14 +71,17 @@
   background: transparent;
   border-radius: var(--border-radius-sm);
   font-weight: 600;
-  color: var(--gray-600);
+  /* --- TEXT COLOR UPDATED --- */
+  color: var(--gray-300); /* Light gray text for inactive tab */
   cursor: pointer;
   transition: var(--transition);
 }
 
 .auth-tabs button.active {
-  background: var(--white);
-  color: var(--primary);
+  /* --- TRANSPARENCY SETTINGS --- */
+  background: rgba(255, 255, 255, 0.2); /* Brighter transparent background */
+  color: var(--white); /* White text for active tab */
+  /* --- END TRANSPARENCY --- */
   box-shadow: var(--shadow-sm);
 }
 
@@ -68,18 +94,35 @@
 .auth-inputs input,
 .auth-inputs select {
   padding: 0.875rem 1rem;
-  border: 2px solid var(--gray-200);
+  /* --- TRANSPARENCY SETTINGS --- */
+  background: rgba(255, 255, 255, 0.1); /* Transparent inputs */
+  border: 2px solid var(--gray-400); /* Light border */
+  color: var(--white); /* White text */
+  /* --- END TRANSPARENCY --- */
   border-radius: var(--border-radius-sm);
   font-size: 1rem;
   transition: var(--transition);
+}
+
+/* Style for select dropdown options (so they are readable) */
+.auth-inputs select option {
+  color: var(--dark);
   background: var(--white);
+}
+
+/* Style for placeholders */
+.auth-inputs input::placeholder {
+  color: var(--gray-300);
+  opacity: 1;
 }
 
 .auth-inputs input:focus,
 .auth-inputs select:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+  /* --- FOCUS STYLE UPDATED --- */
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--white); /* White border on focus */
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
 .auth-button {
@@ -99,6 +142,7 @@
 .auth-button:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  opacity: 0.9;
 }
 
 .auth-status {
@@ -109,16 +153,17 @@
   font-weight: 500;
 }
 
+/* Make status messages more visible */
 .auth-status.error {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: rgba(239, 68, 68, 0.9);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .auth-status.success {
-  background: rgba(66, 184, 131, 0.1);
-  color: var(--success);
-  border: 1px solid rgba(66, 184, 131, 0.2);
+  background: rgba(66, 184, 131, 0.9);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 /* Auth Actions for Register Page */
@@ -132,8 +177,8 @@
   flex: 1;
   padding: 0.875rem 1.5rem;
   border: 2px solid var(--gray-300);
-  background: var(--white);
-  color: var(--gray-700);
+  background: transparent; /* Make secondary button transparent */
+  color: var(--white); /* White text */
   border-radius: var(--border-radius-sm);
   font-weight: 600;
   cursor: pointer;
@@ -145,8 +190,8 @@
 }
 
 .auth-secondary-btn:hover:not(:disabled) {
-  background: var(--gray-50);
-  border-color: var(--gray-400);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--white);
   transform: translateY(-1px);
 }
 
@@ -181,6 +226,20 @@
   cursor: not-allowed;
   transform: none;
 }
+
+/* --- CORRECTED FOOTER RULE --- */
+.auth-footer {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #ffffff; /* White text */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Shadow for readability */
+  z-index: 10;
+}
+
 
 /* Mobile Responsive Design */
 @media (max-width: 768px) {
@@ -318,3 +377,4 @@
     font-size: 0.875rem;
   }
 }
+

@@ -73,6 +73,7 @@ const Register = () => {
             {/* Consider adding a "Confirm Password" input for better UX */}
             <select value={userType} onChange={(e) => setUserType(e.target.value)}>
               <option value="STUDENT">Student</option>
+              
               {/*<option value="FACULTY">Faculty</option>*/}
             </select>
           </div>

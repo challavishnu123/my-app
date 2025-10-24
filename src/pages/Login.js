@@ -28,56 +28,70 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-view">
-      <div className="auth-container">
-        <div className="auth-header">
-          <h1>HuddleSpace</h1>
-          <p>Connect and collaborate instantly.</p>
-        </div>
-
-        <form className="auth-form" onSubmit={handleAuthAction}>
-          <div className="auth-tabs">
-            <button
-              type="button"
-              className={authAction === 'login' ? 'active' : ''}
-              onClick={() => setAuthAction('login')}
-            >
-              Login
-            </button>
-            
+    <>
+      <div className="auth-view">
+        <div className="auth-container">
+          
+          <div className="scrolling-title">
+            <marquee>
+              🤝 Huddle Space: A Collaborative 🎓 Academic 💬 Discussion Forum 🗣️
+            </marquee>
           </div>
 
-          <div className="auth-inputs">
-            <input
-              type="text"
-              placeholder="Username (Roll No / Faculty ID)"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-              <option value="STUDENT">Student</option>
-              <option value="FACULTY">Faculty</option>
-            </select>
+          <div className="auth-header">
+            <h1>HuddleSpace</h1>
+            <p>Connect and collaborate instantly.</p>
           </div>
 
-          <button type="submit" className="auth-button">
-            {authAction === 'login' ? 'Login' : 'Register'}
-          </button>
-
-          {status.message && (
-            <div className={`auth-status ${status.error ? 'error' : 'success'}`}>
-              {status.message}
+          <form className="auth-form" onSubmit={handleAuthAction}>
+            <div className="auth-tabs">
+              <button
+                type="button"
+                className={authAction === 'login' ? 'active' : ''}
+                onClick={() => setAuthAction('login')}
+              >
+                Login
+              </button>
+              
             </div>
-          )}
-        </form>
+
+            <div className="auth-inputs">
+              <input
+                type="text"
+                placeholder="Username (Roll No / Faculty ID)"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+                <option value="STUDENT">Student</option>
+                <option value="FACULTY">Faculty</option>
+              </select>
+            </div>
+
+            <button type="submit" className="auth-button">
+              {authAction === 'login' ? 'Login' : 'Register'}
+            </button>
+
+            {status.message && (
+              <div className={`auth-status ${status.error ? 'error' : 'success'}`}>
+                {status.message}
+              </div>
+            )}
+          </form>
+        </div>
       </div>
-    </div>
+
+      {/* --- MOVED FOOTER OUTSIDE OF .auth-view --- */}
+      <p className="auth-footer">
+        copyright © All rights are reserved by Team Negative Feedback
+      </p>
+    </>
   );
 };
 
